@@ -1,0 +1,548 @@
+---
+title: "Welcome to EAES 420!"
+subtitle: "<br><br> Earth and Environmental Data Science"
+author: "Gavin McNicol"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    lib_dir: libs
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(emo)
+```
+
+class: middle
+
+# Dr. Gavin McNicol (Gavin) 
+
+**IAMA:** Climate change biogeochemist and data scientist (work in progress...)
+**AMA:** Methane!   
+
+**Hobbies... TL;DR:** Geek; excited about Hogwarts Legacy 🧙
+
+
+```{r echo=FALSE, out.width="35%"}
+knitr::include_graphics("img/gavin-headshot.jpeg")
+```
+
+--
+
+McNicol Lab at UIC
+
+---
+
+# Your turn! 🧊🔨
+
+Ask your seat-neighbors:  
+- name
+- major/year
+- favorite pastime?
+- why this course?
+
+---
+
+## Data science 📈
+
+.pull-left-wide[
+- Data science allows you to turn raw data into understanding, insight, and knowledge. 
+
+- We're going to learn to do this in a `tidy` way -- more on that later!
+
+- This is a course on introduction to data science, with an emphasis on statistical thinking.
+]
+
+---
+
+## Course FAQ
+
+.pull-left-wide[
+**Q - What data science background does this course assume?**  
+A - None.
+
+**Q - Is this an intro stat course?**  
+A - Stats and data science are closely related so this course is a great way to get started with statistics. BUT this course is *not* a typical college statistics course.
+
+**Q - Will we be doing computing?**   
+A - Yes.
+
+**Q - Will we be working with EAESy Data?**   
+A - *Yes!*
+]
+
+---
+
+## Course FAQ
+
+.pull-left-wide[
+**Q - Is this an intro CS course?**  
+A - No, but many themes are shared.
+
+**Q - What computing language will we learn?**  
+A - R.
+
+**Q: Why not language X?**  
+A: We can discuss that over `r emo::ji("coffee")`.
+]
+
+---
+
+class: middle
+
+# Software
+## Why coding?
+
+---
+
+## How much carbon is stored in Alaskan coastal rainforests?
+
+```{r echo=FALSE, out.width="75%", fig.align="center"}
+knitr::include_graphics("img/npctr.png")
+```
+
+---
+
+## Building a soil carbon database
+
+```{r echo=FALSE, out.width="75%", fig.align="center"}
+knitr::include_graphics("img/pedons.png")
+```
+
+---
+
+## Looking at the data in Microsoft Excel
+
+```{r echo=FALSE, out.width="90%", fig.align="center"}
+knitr::include_graphics("img/excel.png")
+```
+
+---
+
+## Where is the data in R?
+
+```{r echo=FALSE, out.width="50%", fig.align="center"}
+knitr::include_graphics("img/r.png")
+```
+
+---
+
+## Working with data in RStudio
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/rstudio.png")
+```
+
+---
+
+
+class: middle
+
+# Data science life cycle
+
+---
+
+```{r echo=FALSE, out.width="90%", fig.align="left"}
+knitr::include_graphics("img/data-science-cycle/data-science-cycle.002.png")
+```
+
+---
+
+```{r echo=FALSE, out.width="90%", fig.align="left"}
+knitr::include_graphics("img/data-science-cycle/data-science-cycle.003.png")
+```
+
+---
+
+```{r echo=FALSE, out.width="90%", fig.align="left"}
+knitr::include_graphics("img/data-science-cycle/data-science-cycle.004.png")
+```
+
+---
+
+```{r echo=FALSE, out.width="90%", fig.align="left"}
+knitr::include_graphics("img/data-science-cycle/data-science-cycle.005.png")
+```
+
+---
+
+```{r echo=FALSE, out.width="90%", fig.align="left"}
+knitr::include_graphics("img/data-science-cycle/data-science-cycle.006.png")
+```
+
+---
+
+# The entire course in 5 minutes
+
+--
+
+Let's look at a data set:
+
+--
+
+**Our data**: `grades.csv` from last year.
+
+Looks like this in Excel:
+
+.pull-left[
+```{r echo = F}
+knitr::include_graphics("img/grades_dataset.png")
+```
+]
+
+---
+
+```{r echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("img/data-science-cycle/data-science-cycle.002.png")
+```
+
+---
+
+# Import `grades.csv`
+
+.pull-left[
+```{r}
+grades <- read_csv("data/grades.csv")
+```
+]
+
+---
+
+```{r echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("img/data-science-cycle/data-science-cycle.003.png")
+```
+
+---
+
+## Tidy: Is the data already tidy?
+
+.pull-left[
+```{r}
+grades
+```
+]
+
+---
+
+```{r echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("img/data-science-cycle/data-science-cycle.003.png")
+```
+
+---
+
+## Transform: What variable could I create from the letter grades?
+
+```{r}
+grades
+```
+
+---
+
+## Transform: Create a `grade_points` variable
+
+.pull-left[
+```{r echo = F}
+grades <- grades %>% 
+  mutate(grade_points = ifelse(letter_grade == "A", 4, NA),
+         grade_points = ifelse(letter_grade == "B", 3, grade_points),
+         grade_points = ifelse(letter_grade == "C", 2, grade_points),
+         grade_points = ifelse(letter_grade == "D", 1, grade_points),
+         grade_points = ifelse(letter_grade == "F", 0, grade_points))
+grades
+```
+]
+
+---
+
+```{r echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("img/data-science-cycle/data-science-cycle.004.png")
+```
+
+---
+
+## Exploratory Visualization: Let's just take a look!
+
+```{r echo = F, fig.align="center"}
+grades %>% 
+  ggplot(aes(x = letter_grade)) + 
+  geom_bar() +
+  labs(title = "Grade distribution",
+       x = "Letter Grade",
+       y = "Count") +
+  theme_classic() +
+  theme(plot.title = element_text(size = 20),
+        axis.title = element_text(size = 20),
+        axis.text = element_text(size = 15))
+```
+
+---
+
+## What's the average grade?
+
+```{r}
+mean(grades$letter_grade)
+```
+
+--
+
+```{r}
+mean(grades$grade_points)
+```
+
+
+---
+
+## Exploratory Visualization 2: Let's look at credits!
+
+```{r echo = F, fig.align="center"}
+grades %>% 
+  ggplot(aes(x = grade_points)) + 
+  geom_bar() +
+  labs(title = "Grade distribution",
+       x = "Grade Points",
+       y = "Count", 
+       size = 5) +
+  theme_classic() +
+ theme(plot.title = element_text(size = 20),
+        axis.title = element_text(size = 20),
+        axis.text = element_text(size = 15))
+```
+
+---
+
+```{r echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("img/data-science-cycle/data-science-cycle.006.png")
+```
+
+---
+
+## What question could be ask with this dataset?
+
+--
+
+**How can you get an A?**   Or... What is a good predictor of an A grade?
+
+--
+
+```{r echo = F, fig.align="center", out.width="50%"}
+grades %>% 
+  mutate(attendance = ifelse(attendance > 25, 25, attendance)) %>%
+  ggplot(aes(x = attendance, y = grade_points)) + 
+  geom_point(size = 3) +
+  labs(title = "Relationship between attendance and grade points",
+       x = "Classes attended",
+       y = "Grade Points") +
+  theme_classic() +
+  theme(plot.title = element_text(size = 20),
+        axis.title = element_text(size = 20),
+        axis.text = element_text(size = 15))
+```
+
+---
+
+## Let's fit a linear (straight line) model
+
+```{r echo = F, message = F, fig.align="center"}
+grades %>% 
+  mutate(attendance = ifelse(attendance > 25, 25, attendance)) %>%
+  ggplot(aes(x = attendance, y = grade_points)) + 
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = F, color = "gold") +
+  labs(title = "Relationship between attendance and grade points",
+       x = "Classes attended",
+       y = "Grade Points") +
+  theme_classic() +
+ theme(plot.title = element_text(size = 20),
+        axis.title = element_text(size = 20),
+        axis.text = element_text(size = 15))
+```
+
+---
+
+```{r echo=FALSE, out.width="90%", fig.align="left"}
+knitr::include_graphics("img/data-science-cycle/data-science-cycle.007.png")
+```
+
+---
+
+## Today's Take-home message 🥁🥁: 
+
+
+**Come to class!** 😜
+
+```{r echo = F, message = F, fig.align="center", out.width="50%"}
+grades %>% 
+  mutate(attendance = ifelse(attendance > 25, 25, attendance)) %>%
+  ggplot(aes(x = attendance, y = grade_points)) + 
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = F, color = "gold") +
+  labs(title = "Relationship between attendance and grade points",
+       x = "Classes attended",
+       y = "Grade Points") +
+  theme_classic() +
+ theme(plot.title = element_text(size = 20),
+        axis.title = element_text(size = 20),
+        axis.text = element_text(size = 15))
+```
+
+
+---
+
+## Data science by programming R (writing R code)
+
+```{r echo=FALSE, out.width="90%", fig.align="left"}
+knitr::include_graphics("img/data-science-cycle/data-science-cycle.009.png")
+```
+
+---
+
+## You'll read and execute R code in RStudio
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions.png")
+```
+
+---
+
+class: middle
+
+# Let's dive in!
+
+---
+
+## Global annual CO2 emissions in 1991 
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-01.png")
+```
+
+Source: Global Carbon Project
+
+--
+
+What's happened since 1991? Let's look at some time series data.
+
+---
+
+class: inverse
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-02.png")
+```
+
+---
+
+class: inverse
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-03.png")
+```
+
+---
+
+class: inverse
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-04.png")
+```
+
+---
+
+class: inverse
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-05.png")
+```
+
+---
+
+class: inverse
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-06.png")
+```
+
+---
+
+class: inverse
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-07.png")
+```
+
+---
+
+class: inverse
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-08.png")
+```
+
+---
+
+class: inverse
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-09.png")
+```
+
+---
+
+class: inverse
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-10.png")
+```
+
+---
+
+class: inverse
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-11.png")
+```
+
+---
+
+class: inverse
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-12.png")
+```
+
+---
+
+class: inverse
+
+```{r echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-13.png")
+```
+
+---
+
+.center[
+.large[
+Now, your turn!
+
+Open the exercise **e-01-carbon-emissions** project in RStudio Cloud!
+]
+]
+
+```{r echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("img/carbon-emissions/carbon-emissions-14.png")
+```
+
+---
+
+.center[
+.large[
+This class content was built from the Data Science in a Box source materials.
+https://datasciencebox.org/index.html
+]
+]
